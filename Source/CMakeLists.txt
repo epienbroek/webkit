@@ -31,11 +31,12 @@ WEBKIT_INCLUDE_CONFIG_FILES_IF_EXISTS()
 # -----------------------------------------------------------------------------
 # Set compiler flags for all targets
 # -----------------------------------------------------------------------------
-if (NOT WIN32)
-	WEBKIT_SET_EXTRA_COMPILER_FLAGS(bmalloc ${ADDITIONAL_COMPILER_FLAGS})
-endif ()
 WEBKIT_SET_EXTRA_COMPILER_FLAGS(WTF ${ADDITIONAL_COMPILER_FLAGS})
 WEBKIT_SET_EXTRA_COMPILER_FLAGS(JavaScriptCore ${ADDITIONAL_COMPILER_FLAGS})
+
+if (NOT WIN32)
+    WEBKIT_SET_EXTRA_COMPILER_FLAGS(bmalloc ${ADDITIONAL_COMPILER_FLAGS})
+endif ()
 
 if (ENABLE_WEBCORE)
     WEBKIT_SET_EXTRA_COMPILER_FLAGS(WebCoreTestSupport ${ADDITIONAL_COMPILER_FLAGS})
