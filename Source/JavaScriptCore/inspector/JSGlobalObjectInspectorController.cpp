@@ -45,8 +45,10 @@
 #include <wtf/Stopwatch.h>
 
 #include <cxxabi.h>
+#if !OS(WINDOWS)
 #include <dlfcn.h>
 #include <execinfo.h>
+#endif
 
 #if ENABLE(REMOTE_INSPECTOR)
 #include "JSGlobalObjectDebuggable.h"
@@ -159,9 +161,11 @@ void JSGlobalObjectInspectorController::appendAPIBacktrace(ScriptCallStack* call
     for (int i = 0; i < size; ++i) {
         const char* mangledName = nullptr;
         char* cxaDemangled = nullptr;
+#if !OS(WINDOWS)
         Dl_info info;
         if (dladdr(stack[i], &info) && info.dli_sname)
             mangledName = info.dli_sname;
+#endif
         if (mangledName)
             cxaDemangled = abi::__cxa_demangle(mangledName, nullptr, nullptr, nullptr);
         if (mangledName || cxaDemangled)
