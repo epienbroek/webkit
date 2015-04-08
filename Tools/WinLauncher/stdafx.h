@@ -69,8 +69,8 @@
 #include <tchar.h>
 #include <windows.h>
 #include <wininet.h>
-#include <wtf/ExportMacros.h>
 #include <wtf/Platform.h>
+#include <wtf/ExportMacros.h>
 
 #if 0
 // Visual Studio Leak Detection
