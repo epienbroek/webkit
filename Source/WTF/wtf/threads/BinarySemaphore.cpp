@@ -26,12 +26,14 @@
 #include "config.h"
 #include "BinarySemaphore.h"
 
-#if !PLATFORM(WIN)
+#if 1 //!OS(WINDOWS)
 
 namespace WTF {
 
 BinarySemaphore::BinarySemaphore()
+#if 0
     : m_isSet(false)
+#endif
 {
 }
     
@@ -41,14 +43,17 @@ BinarySemaphore::~BinarySemaphore()
 
 void BinarySemaphore::signal()
 {
+#if 0
     MutexLocker locker(m_mutex);
 
     m_isSet = true;
     m_condition.signal();
+#endif
 }
 
 bool BinarySemaphore::wait(double absoluteTime)
 {
+#if 0
     MutexLocker locker(m_mutex);
 
     bool timedOut = false;
@@ -60,6 +65,7 @@ bool BinarySemaphore::wait(double absoluteTime)
 
     // Reset the semaphore.
     m_isSet = false;
+#endif
     return true;
 }
 
