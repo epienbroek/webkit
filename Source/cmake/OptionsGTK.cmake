@@ -431,7 +431,7 @@ set(SHOULD_INSTALL_JS_SHELL ON)
 # Add a typelib file to the list of all typelib dependencies. This makes it easy to
 # expose a 'gir' target with all gobject-introspection files.
 macro(ADD_TYPELIB typelib)
-    if (ENABLE_INTROSPECTION)
+    if (ENABLE_INTROSPECTION AND INTROSPECTION_FOUND)
         get_filename_component(target_name ${typelib} NAME_WE)
         add_custom_target(${target_name}-gir ALL DEPENDS ${typelib})
         list(APPEND GObjectIntrospectionTargets ${target_name}-gir)
