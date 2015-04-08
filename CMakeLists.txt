@@ -73,12 +73,6 @@ find_package(Ruby 1.8.7)
 # Determine the target processor
 # -----------------------------------------------------------------------------
 
-# With mingw cmake returns empty string for CMAKE_SYSTEM_PROCESSOR.
-# So we pre-poulate it ourselves
-if (CMAKE_CXX_COMPILER MATCHES "mingw32")
-    string(TOLOWER ${CMAKE_CXX_COMPILER} CMAKE_SYSTEM_PROCESSOR)
-endif()
-
 # Use MSVC_CXX_ARCHITECTURE_ID instead of CMAKE_SYSTEM_PROCESSOR when defined,
 # since the later one just resolves to the host processor on Windows.
 if (MSVC_CXX_ARCHITECTURE_ID)
