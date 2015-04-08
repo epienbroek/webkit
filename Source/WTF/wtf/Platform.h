@@ -640,7 +640,7 @@
 /* Include feature macros */
 #include <wtf/FeatureDefines.h>
 
-#if OS(WINDOWS)
+#if OS(WINDOWS) && !defined(USE_SYSTEM_MALLOC)
 #define USE_SYSTEM_MALLOC 1
 #endif
 
