@@ -316,7 +316,7 @@ inline void memoryBarrierBeforeUnlock() { compilerFence(); }
 inline bool weakCompareAndSwap(uint8_t* location, uint8_t expected, uint8_t newValue)
 {
 #if ENABLE(COMPARE_AND_SWAP)
-#if !OS(WINDOWS) && (CPU(X86) || CPU(X86_64))
+#if COMPILER(GCC) && (CPU(X86) || CPU(X86_64))
     unsigned char result;
     asm volatile(
         "lock; cmpxchgb %3, %2\n\t"
