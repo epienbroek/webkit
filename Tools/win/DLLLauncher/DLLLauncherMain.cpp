@@ -103,7 +103,7 @@ static wstring copyEnvironmentVariable(const wstring& variable)
     if (!length)
         return wstring();
     vector<wchar_t> buffer(length);
-    if (!GetEnvironmentVariable(variable.c_str(), &buffer[0], buffer.size()) || !buffer[0])
+    if (!GetEnvironmentVariableW(variable.c_str(), &buffer[0], buffer.size()) || !buffer[0])
         return wstring();
     return &buffer[0];
 }
@@ -125,7 +125,7 @@ static int fatalError(const wstring& programName, const wstring& message)
 
 static bool directoryExists(const wstring& path)
 {
-    DWORD attrib = ::GetFileAttributes(path.c_str());
+    DWORD attrib = ::GetFileAttributesW(path.c_str());
 
     return ((attrib != INVALID_FILE_ATTRIBUTES) && (attrib & FILE_ATTRIBUTE_DIRECTORY));
 }
