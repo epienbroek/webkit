@@ -44,7 +44,9 @@
 #include <wtf/gobject/GRefPtr.h>
 #elif PLATFORM(EFL)
 #include <DispatchQueueEfl.h>
-#elif OS(WINDOWS)
+#endif
+
+#if OS(WINDOWS)
 #include <wtf/HashMap.h>
 #include <wtf/Vector.h>
 #include <wtf/win/WorkItemWin.h>
