@@ -265,7 +265,7 @@ static void recomputeDependentOptions()
 #if !ENABLE(FTL_JIT)
     Options::useFTLJIT() = false;
 #endif
-#if OS(WINDOWS) && CPU(X86) 
+#if OS(WINDOWS) && CPU(X86) && ENABLE(ASSEMBLER)
     // Disable JIT on Windows if SSE2 is not present 
     if (!MacroAssemblerX86::supportsFloatingPoint())
         Options::useJIT() = false;
