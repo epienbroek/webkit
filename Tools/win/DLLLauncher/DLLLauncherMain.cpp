@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 #include <windows.h>
+#include <crtdbg.h>
 
 using namespace std;
 
