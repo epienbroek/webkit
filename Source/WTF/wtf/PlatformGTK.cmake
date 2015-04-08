@@ -17,6 +17,12 @@ list(APPEND WTF_LIBRARIES
     ${ZLIB_LIBRARIES}
 )
 
+if (WIN32)
+    list(APPEND WTF_LIBRARIES
+        winmm
+    )
+endif ()
+
 list(APPEND WTF_INCLUDE_DIRECTORIES
     ${GLIB_INCLUDE_DIRS}
 )
