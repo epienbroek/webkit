@@ -38,7 +38,7 @@ if (NOT MINGW)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:wWinMainCRTStartup")
 endif()
 
-add_definitions(-D_UNICODE -DWIN_CAIRO)
+add_definitions(-D_UNICODE -DWIN_CAIRO -DUSE_CONSOLE_ENTRY_POINT)
 include_directories(${WinLauncher_INCLUDE_DIRECTORIES})
 add_library(WinLauncher SHARED ${WinLauncher_SOURCES})
 target_link_libraries(WinLauncher ${WinLauncher_LIBRARIES})
