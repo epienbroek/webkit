@@ -29,7 +29,7 @@ endif ()
 
 if (WIN32)
     add_subdirectory(DumpRenderTree)
-    add_subdirectory(WinLauncher)
+#    add_subdirectory(WinLauncher)
 endif ()
 
 if (ENABLE_WEBKIT2 AND ENABLE_API_TESTS)
