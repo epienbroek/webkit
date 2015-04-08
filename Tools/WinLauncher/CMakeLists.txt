@@ -34,7 +34,9 @@ set(WinLauncher_LIBRARIES
     shlwapi
 )
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:wWinMainCRTStartup")
+if (NOT MINGW)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:wWinMainCRTStartup")
+endif()
 
 add_definitions(-D_UNICODE -DWIN_CAIRO)
 include_directories(${WinLauncher_INCLUDE_DIRECTORIES})
