@@ -11,7 +11,7 @@ macro(WEBKIT_SET_EXTRA_COMPILER_FLAGS _target)
         endif ()
 
         get_target_property(TARGET_TYPE ${_target} TYPE)
-        if (${TARGET_TYPE} STREQUAL "STATIC_LIBRARY") # -fPIC is automatically added to shared libraries
+        if (${TARGET_TYPE} STREQUAL "STATIC_LIBRARY" AND NOT MINGW) # -fPIC is automatically added to shared libraries
             set(OLD_COMPILE_FLAGS "-fPIC ${OLD_COMPILE_FLAGS}")
         endif ()
 
