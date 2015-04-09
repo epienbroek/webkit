@@ -356,7 +356,11 @@ endif ()
 
 if (ENABLE_CREDENTIAL_STORAGE)
     find_package(Libsecret)
-    set(ENABLE_CREDENTIAL_STORAGE 1)
+    if (LIBSECRET_FOUND)
+        set(ENABLE_CREDENTIAL_STORAGE 1)
+    else ()
+        set(ENABLE_CREDENTIAL_STORAGE 0)
+    endif()
 endif ()
 
 if (GTK_SUPPORTS_GESTURES)
