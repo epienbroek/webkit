@@ -11493,7 +11493,7 @@ restartAfterComment:
     case CharacterCaselessU:
         if (UNLIKELY(*currentCharacter<SrcCharacterType>() == '+')) {
             if (parseUnicodeRange<SrcCharacterType>()) {
-                m_token = UNICODERANGE;
+                m_token = WK_UNICODERANGE;
                 yylval->string.init(tokenStart<SrcCharacterType>(), currentCharacter<SrcCharacterType>() - tokenStart<SrcCharacterType>());
                 break;
             }

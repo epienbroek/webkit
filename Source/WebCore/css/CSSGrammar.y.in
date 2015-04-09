@@ -67,7 +67,7 @@ static inline bool isCSSTokenAString(int yytype)
     case DIRFUNCTION:
     case ROLEFUNCTION:
 #endif
-    case UNICODERANGE:
+    case WK_UNICODERANGE:
         return true;
     default:
         return false;
@@ -225,7 +225,7 @@ static bool selectorListDoesNotMatchAnyPseudoElement(const Vector<std::unique_pt
 %token <string> ROLEFUNCTION
 #endif
 
-%token <string> UNICODERANGE
+%token <string> WK_UNICODERANGE
 
 %union { CSSParserSelectorCombinator relation; }
 %type <relation> combinator
@@ -1649,7 +1649,7 @@ term:
   | DIMEN maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_DIMENSION; }
   | unary_operator DIMEN maybe_space { $$.id = CSSValueInvalid; $$.string = $2; $$.unit = CSSPrimitiveValue::CSS_DIMENSION; }
   | URI maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_URI; }
-  | UNICODERANGE maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_UNICODE_RANGE; }
+  | WK_UNICODERANGE maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_UNICODE_RANGE; }
   | HEX maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_PARSER_HEXCOLOR; }
   | '#' maybe_space { $$.id = CSSValueInvalid; $$.string = CSSParserString(); $$.unit = CSSPrimitiveValue::CSS_PARSER_HEXCOLOR; } /* Handle error case: "color: #;" */
   /* FIXME: according to the specs a function can have a unary_operator in front. I know no case where this makes sense */
