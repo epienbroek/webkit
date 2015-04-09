@@ -43,7 +43,7 @@
 #endif
 
 // FIXME: Find a better way to avoid the name confliction for NO_ERROR.
-#if PLATFORM(WIN)
+#if PLATFORM(WIN) || (PLATFORM(GTK) && OS(WINDOWS))
 #undef NO_ERROR
 #elif PLATFORM(GTK)
 // This define is from the X11 headers, but it's used below, so we must undefine it.
