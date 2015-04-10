@@ -30,8 +30,10 @@
 #undef WK_EXPORT
 #if defined(WK_NO_EXPORT)
 #define WK_EXPORT
-#elif defined(__GNUC__) && !defined(__CC_ARM) && !defined(__ARMCC__)
+#elif defined(__GNUC__) && !defined(__CC_ARM) && !defined(__ARMCC__) && !defined(__WIN32__)
 #define WK_EXPORT __attribute__((visibility("default")))
+#elif defined(__WIN32__)
+#define WK_EXPORT __declspec(dllexport)
 #else /* !defined(WK_NO_EXPORT) */
 #define WK_EXPORT
 #endif /* defined(WK_NO_EXPORT) */
