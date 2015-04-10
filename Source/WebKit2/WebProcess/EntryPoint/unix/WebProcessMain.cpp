@@ -27,6 +27,10 @@
 
 #include <cstdlib>
 
+#if PLATFORM(GTK)
+#include <glib.h>
+#endif
+
 using namespace WebKit;
 
 int main(int argc, char** argv)
@@ -39,7 +43,11 @@ int main(int argc, char** argv)
     // overwrite this priority string if it's already set by the user.
     // https://bugzilla.gnome.org/show_bug.cgi?id=738633
     // WARNING: This needs to be KEPT IN SYNC with WebProcessMain.cpp.
+#if PLATFORM(GTK)
+    g_setenv("G_TLS_GNUTLS_PRIORITY", "NORMAL:%COMPAT:%LATEST_RECORD_VERSION:!VERS-SSL3.0:!ARCFOUR-128", 0);
+#else
     setenv("G_TLS_GNUTLS_PRIORITY", "NORMAL:%COMPAT:%LATEST_RECORD_VERSION:!VERS-SSL3.0:!ARCFOUR-128", 0);
+#endif
 
     return WebProcessMainUnix(argc, argv);
 }
