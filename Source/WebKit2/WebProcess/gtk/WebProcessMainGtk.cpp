@@ -38,6 +38,10 @@
 #include <X11/Xlib.h>
 #endif
 
+#if OS(WINDOWS)
+#define sleep _sleep
+#endif
+
 using namespace WebCore;
 
 namespace WebKit {
