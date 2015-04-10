@@ -33,7 +33,9 @@
 #include "PluginProcessCreationParameters.h"
 #include "ProcessExecutablePath.h"
 #include <WebCore/FileSystem.h>
+#if !OS(WINDOWS)
 #include <sys/wait.h>
+#endif
 #include <wtf/text/CString.h>
 #include <wtf/text/WTFString.h>
 
