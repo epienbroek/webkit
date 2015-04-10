@@ -124,8 +124,10 @@ void ProcessLauncher::launchProcess()
     }
 
     // Don't expose the parent socket to potential future children.
+#if !OS(WINDOWS)
     while (fcntl(socketPair.client, F_SETFD, FD_CLOEXEC) == -1)
         RELEASE_ASSERT(errno != EINTR);
+#endif
 
     close(socketPair.client);
     m_processIdentifier = pid;
@@ -148,7 +150,11 @@ void ProcessLauncher::terminateProcess()
     if (!m_processIdentifier)
         return;
 
+#if OS(WINDOWS)
+    g_spawn_close_pid(m_processIdentifier);
+#else
     kill(m_processIdentifier, SIGKILL);
+#endif
     m_processIdentifier = 0;
 }
 
