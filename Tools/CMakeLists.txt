@@ -28,7 +28,7 @@ elseif ("${PORT}" STREQUAL "GTK")
 endif ()
 
 if (WIN32)
-    add_subdirectory(DumpRenderTree)
+#    add_subdirectory(DumpRenderTree)
 #    add_subdirectory(WinLauncher)
 endif ()
 
