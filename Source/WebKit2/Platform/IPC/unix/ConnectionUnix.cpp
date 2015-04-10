@@ -30,11 +30,13 @@
 
 #include "DataReference.h"
 #include "SharedMemory.h"
+#if !OS(WINDOWS)
 #include <sys/socket.h>
+#include <poll.h>
+#endif
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <poll.h>
 #include <wtf/Assertions.h>
 #include <wtf/Functional.h>
 #include <wtf/StdLibExtras.h>
@@ -287,6 +289,7 @@ bool Connection::processMessage()
 
 static ssize_t readBytesFromSocket(int socketDescriptor, uint8_t* buffer, int count, int* fileDescriptors, size_t* fileDescriptorsCount)
 {
+#if !OS(WINDOWS)
     struct msghdr message;
     memset(&message, 0, sizeof(message));
 
@@ -340,6 +343,7 @@ static ssize_t readBytesFromSocket(int socketDescriptor, uint8_t* buffer, int co
 
         return bytesRead;
     }
+#endif
 
     return -1;
 }
@@ -380,6 +384,7 @@ void Connection::readyReadHandler()
 
 bool Connection::open()
 {
+#if !OS(WINDOWS)
     int flags = fcntl(m_socketDescriptor, F_GETFL, 0);
     while (fcntl(m_socketDescriptor, F_SETFL, flags | O_NONBLOCK) == -1) {
         if (errno != EINTR) {
@@ -387,6 +392,7 @@ bool Connection::open()
             return false;
         }
     }
+#endif
 
     RefPtr<Connection> protectedThis(this);
     m_isConnected = true;
@@ -448,6 +454,7 @@ bool Connection::sendOutgoingMessage(std::unique_ptr<MessageEncoder> encoder)
         attachments.append(handle.releaseToAttachment());
     }
 
+#if !OS(WINDOWS)
     struct msghdr message;
     memset(&message, 0, sizeof(message));
 
@@ -459,6 +466,7 @@ bool Connection::sendOutgoingMessage(std::unique_ptr<MessageEncoder> encoder)
 
     iov[0].iov_base = reinterpret_cast<void*>(&messageInfo);
     iov[0].iov_len = sizeof(messageInfo);
+#endif
 
     auto attachmentInfo = std::make_unique<AttachmentInfo[]>(attachments.size());
 
@@ -469,11 +477,14 @@ bool Connection::sendOutgoingMessage(std::unique_ptr<MessageEncoder> encoder)
                 attachmentFDBufferLength++;
         }
     }
+#if !OS(WINDOWS)
     auto attachmentFDBuffer = std::make_unique<char[]>(CMSG_SPACE(sizeof(int) * attachmentFDBufferLength));
+#endif
 
     if (!attachments.isEmpty()) {
         int* fdPtr = 0;
 
+#if !OS(WINDOWS)
         if (attachmentFDBufferLength) {
             message.msg_control = attachmentFDBuffer.get();
             message.msg_controllen = CMSG_SPACE(sizeof(int) * attachmentFDBufferLength);
@@ -486,6 +497,7 @@ bool Connection::sendOutgoingMessage(std::unique_ptr<MessageEncoder> encoder)
 
             fdPtr = reinterpret_cast<int*>(CMSG_DATA(cmsg));
         }
+#endif
 
         int fdIndex = 0;
         for (size_t i = 0; i < attachments.size(); ++i) {
@@ -508,11 +520,14 @@ bool Connection::sendOutgoingMessage(std::unique_ptr<MessageEncoder> encoder)
             }
         }
 
+#if !OS(WINDOWS)
         iov[iovLength].iov_base = attachmentInfo.get();
         iov[iovLength].iov_len = sizeof(AttachmentInfo) * attachments.size();
         ++iovLength;
+#endif
     }
 
+#if !OS(WINDOWS)
     if (!messageInfo.isMessageBodyIsOutOfLine() && encoder->bufferSize()) {
         iov[iovLength].iov_base = reinterpret_cast<void*>(encoder->buffer());
         iov[iovLength].iov_len = encoder->bufferSize();
@@ -539,11 +554,15 @@ bool Connection::sendOutgoingMessage(std::unique_ptr<MessageEncoder> encoder)
         return false;
     }
     return true;
+#else
+    return false;
+#endif
 }
 
 Connection::SocketPair Connection::createPlatformConnection(unsigned options)
 {
     int sockets[2];
+#if !OS(WINDOWS)
     RELEASE_ASSERT(socketpair(AF_UNIX, SOCKET_TYPE, 0, sockets) != -1);
 
     if (options & SetCloexecOnServer) {
@@ -557,6 +576,10 @@ Connection::SocketPair Connection::createPlatformConnection(unsigned options)
         while (fcntl(sockets[0], F_SETFD, FD_CLOEXEC) == -1)
             RELEASE_ASSERT(errno != EINTR);
     }
+#else
+    sockets[0] = -1;
+    sockets[1] = -1;
+#endif
 
     SocketPair socketPair = { sockets[0], sockets[1] };
     return socketPair;
