@@ -157,7 +157,7 @@ std::unique_ptr<GLContext> GLContext::createContextForWindow(GLNativeWindowType 
         return WTF::move(glxContext);
 #endif
 #if USE(EGL)
-    if (auto eglContext = GLContextEGL::createContext(windowHandle, sharingContext))
+    if (auto eglContext = GLContextEGL::createContext((EGLNativeWindowType) windowHandle, sharingContext))
         return WTF::move(eglContext);
 #endif
     return nullptr;
