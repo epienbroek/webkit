@@ -23,6 +23,6 @@
 #include <wtf/Assertions.h>
 #include <wtf/text/CString.h>
 
-CString getCurrentExecutablePath();
+WTF_EXPORT_PRIVATE CString getCurrentExecutablePath();
 
 #endif
