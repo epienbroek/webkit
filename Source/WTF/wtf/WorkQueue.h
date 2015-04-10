@@ -77,8 +77,8 @@ public:
 #if OS(DARWIN)
     dispatch_queue_t dispatchQueue() const { return m_dispatchQueue; }
 #elif PLATFORM(GTK)
-    void registerSocketEventHandler(int, std::function<void ()>, std::function<void ()>);
-    void unregisterSocketEventHandler(int);
+    WTF_EXPORT_PRIVATE void registerSocketEventHandler(int, std::function<void ()>, std::function<void ()>);
+    WTF_EXPORT_PRIVATE void unregisterSocketEventHandler(int);
 #elif PLATFORM(EFL)
     void registerSocketEventHandler(int, std::function<void ()>);
     void unregisterSocketEventHandler(int);
