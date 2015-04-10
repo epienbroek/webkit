@@ -34,7 +34,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#if !OS(WINDOWS)
 #include <sys/mman.h>
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -111,15 +113,18 @@ PassRefPtr<SharedMemory> SharedMemory::create(size_t size)
         String name = String("/WK2SharedMemory.") + String::number(static_cast<unsigned>(WTF::randomNumber() * (std::numeric_limits<unsigned>::max() + 1.0)));
         tempName = name.utf8();
 
+#if !OS(WINDOWS)
         do {
             fileDescriptor = shm_open(tempName.data(), O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         } while (fileDescriptor == -1 && errno == EINTR);
+#endif
     }
     if (fileDescriptor == -1) {
         WTFLogAlways("Failed to create shared memory file %s: %s", tempName.data(), strerror(errno));
         return 0;
     }
 
+#if !OS(WINDOWS)
     while (ftruncate(fileDescriptor, size) == -1) {
         if (errno != EINTR) {
             closeWithRetry(fileDescriptor);
@@ -142,10 +147,12 @@ PassRefPtr<SharedMemory> SharedMemory::create(size_t size)
     instance->m_fileDescriptor = fileDescriptor;
     instance->m_size = size;
     return instance.release();
+#endif
 }
 
 static inline int accessModeMMap(SharedMemory::Protection protection)
 {
+#if !OS(WINDOWS)
     switch (protection) {
     case SharedMemory::ReadOnly:
         return PROT_READ;
@@ -155,12 +162,16 @@ static inline int accessModeMMap(SharedMemory::Protection protection)
 
     ASSERT_NOT_REACHED();
     return PROT_READ | PROT_WRITE;
+#else
+    return 0;
+#endif
 }
 
 PassRefPtr<SharedMemory> SharedMemory::create(const Handle& handle, Protection protection)
 {
     ASSERT(!handle.isNull());
 
+#if !OS(WINDOWS)
     void* data = mmap(0, handle.m_size, accessModeMMap(protection), MAP_SHARED, handle.m_fileDescriptor, 0);
     if (data == MAP_FAILED)
         return 0;
@@ -171,11 +182,16 @@ PassRefPtr<SharedMemory> SharedMemory::create(const Handle& handle, Protection p
     instance->m_size = handle.m_size;
     handle.m_fileDescriptor = -1;
     return instance;
+#else
+    return 0;
+#endif
 }
 
 SharedMemory::~SharedMemory()
 {
+#if !OS(WINDOWS)
     munmap(m_data, m_size);
+#endif
     closeWithRetry(m_fileDescriptor);
 }
 
@@ -195,6 +211,7 @@ bool SharedMemory::createHandle(Handle& handle, Protection)
         }
     }
 
+#if !OS(WINDOWS)
     while (fcntl(duplicatedHandle, F_SETFD, FD_CLOEXEC) == -1) {
         if (errno != EINTR) {
             ASSERT_NOT_REACHED();
@@ -202,6 +219,7 @@ bool SharedMemory::createHandle(Handle& handle, Protection)
             return false;
         }
     }
+#endif
     handle.m_fileDescriptor = duplicatedHandle;
     handle.m_size = m_size;
     return true;
@@ -211,8 +229,10 @@ unsigned SharedMemory::systemPageSize()
 {
     static unsigned pageSize = 0;
 
+#if !OS(WINDOWS)
     if (!pageSize)
         pageSize = getpagesize();
+#endif
 
     return pageSize;
 }
