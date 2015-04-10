@@ -801,7 +801,8 @@ include_directories(
 )
 
 add_library(webkit2gtkinjectedbundle MODULE "${WEBKIT2_DIR}/WebProcess/gtk/WebGtkInjectedBundleMain.cpp")
-add_dependencies(webkit2gtkinjectedbundle GObjectDOMBindings)
+target_link_libraries(webkit2gtkinjectedbundle WebKit2)
+add_dependencies(webkit2gtkinjectedbundle WebKit2)
 add_webkit2_prefix_header(webkit2gtkinjectedbundle)
 
 if (ENABLE_INTROSPECTION AND INTROSPECTION_FOUND)
