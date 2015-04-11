@@ -327,7 +327,6 @@ list(APPEND WebKit2_SOURCES
     WebProcess/WebPage/gtk/WebPrintOperationGtk.cpp
 
     WebProcess/gtk/WebGtkExtensionManager.cpp
-    WebProcess/gtk/WebGtkInjectedBundleMain.cpp
     WebProcess/gtk/WebProcessMainGtk.cpp
 
     WebProcess/soup/WebKitSoupRequestGeneric.cpp
