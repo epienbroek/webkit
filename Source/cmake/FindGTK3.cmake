@@ -45,6 +45,15 @@ if (GTK3_VERSION)
     endif ()
 endif ()
 
+if (GTK3_VERSION AND VERSION_OK AND ENABLE_WIN32_TARGET)
+    set(ENABLE_X11_TARGET OFF)
+    set(ENABLE_WAYLAND_TARGET OFF)
+    pkg_check_modules(GTK3_WIN32 gtk+-win32-3.0)
+    if (NOT("${GTK3_WIN32_VERSION}" VERSION_EQUAL "${GTK3_VERSION}"))
+        set(ENABLE_WIN32_TARGET OFF)
+    endif ()
+endif ()
+
 if (GTK3_VERSION AND VERSION_OK AND ENABLE_X11_TARGET)
     pkg_check_modules(GTK3_X11 gtk+-x11-3.0)
     if (NOT("${GTK3_X11_VERSION}" VERSION_EQUAL "${GTK3_VERSION}"))
@@ -59,9 +68,9 @@ if (GTK3_VERSION AND VERSION_OK AND ENABLE_WAYLAND_TARGET)
     endif ()
 endif ()
 
-if (NOT(ENABLE_X11_TARGET OR ENABLE_WAYLAND_TARGET))
+if (NOT(ENABLE_X11_TARGET OR ENABLE_WAYLAND_TARGET OR ENABLE_WIN32_TARGET))
     message(FATAL_ERROR "At least one of the following windowing targets must "
-        "be enabled and also supported by the GTK+ dependency: X11, Wayland")
+        "be enabled and also supported by the GTK+ dependency: X11, Wayland, Win32")
 endif ()
 
 if (GTK3_VERSION AND VERSION_OK AND NOT("${GTK3_VERSION}" VERSION_LESS "3.14.0"))
